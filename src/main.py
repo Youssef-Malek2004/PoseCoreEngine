@@ -239,7 +239,7 @@ def main():
 
             # Track rep phases (only if in valid position)
             if is_valid_position:
-                if not in_rep and elbow_avg < 160:  # Starting a rep
+                if not in_rep and elbow_avg < 140:  # Starting a rep
                     in_rep = True
                     rep_scorer.reset()
 

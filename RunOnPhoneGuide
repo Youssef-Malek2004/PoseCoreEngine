@@ -1,0 +1,365 @@
+# 📱 Running Push-Up Counter on Your Samsung S25 Ultra
+
+This guide will help you run the push-up counter on your Samsung S25 Ultra.
+
+## 🚀 Quick Start
+
+### Step 1: Start the Server on Your Computer
+
+```bash
+python serve.py
+```
+
+You'll see output like this:
+```
+============================================================
+🏋️  Push-Up Counter Web Server Running!
+============================================================
+
+📱 Access from your Samsung S25 Ultra:
+
+   Open browser and go to:
+
+   http://192.168.1.100:8080
+
+   (Make sure your phone is on the same WiFi network)
+
+============================================================
+```
+
+### Step 2: Open on Your Phone
+
+1. **Make sure your phone is on the same WiFi network** as your computer
+2. Open **Samsung Internet** or **Chrome** on your phone
+3. Type the URL shown in the terminal (e.g., `http://192.168.1.100:8080`)
+4. Press Enter
+
+### Step 3: Grant Camera Permissions
+
+When prompted:
+1. Tap **"Allow"** to grant camera access
+2. The camera view should appear immediately
+
+### Step 4: Position Yourself
+
+1. **Use landscape mode** (rotate phone sideways)
+2. **Use back camera** for better quality (tap "Flip" if needed)
+3. **Position camera** to see your full body:
+   - Should see shoulders, hips, knees, and ankles
+   - Side view works best
+4. **Get into plank position**:
+   - Legs straight
+   - Body horizontal
+   - Face pointing down
+
+### Step 5: Start Counting!
+
+- Watch for **"✓ READY"** indicator (green, top right)
+- Do push-ups with proper form
+- Counter will increment automatically
+- See your metrics in real-time
+
+## 📋 Requirements
+
+### On Your Computer
+
+- Python 3.6 or higher
+- Same WiFi network as your phone
+- Files:
+  - `serve.py`
+  - `web/index.html`
+  - `web/pushup_counter.js`
+
+### On Your Phone (Samsung S25 Ultra)
+
+- Modern browser (Samsung Internet, Chrome, Firefox)
+- Camera access enabled
+- Same WiFi network as computer
+
+## 🎮 Using the App
+
+### Interface Elements
+
+```
+┌─────────────────────────────────┐
+│ [5 REPS]          [✓ READY]    │ ← Top bar
+│                                  │
+│                                  │
+│        [Camera View]             │
+│        [Skeleton Overlay]        │
+│                                  │
+│ [Elbow: 92°]                    │
+│ [Arm-Back: 18° [PARALLEL]]      │ ← Metrics
+│ [Knee: 175°]                    │
+│                      [Reset]     │
+│                      [Flip]      │ ← Controls
+└─────────────────────────────────┘
+```
+
+### Controls
+
+- **Reset Button**: Reset rep counter to 0
+- **Flip Button**: Switch between front and back camera
+
+### Status Indicators
+
+**Position Status (Top Right):**
+- `✓ READY` (green) = In proper push-up position, counting enabled
+- `✗ INVALID POS` (red) = Not in position, counting disabled
+
+**Metrics (Bottom Left):**
+- **Elbow**: Current elbow angle
+- **Arm-Back**: Arm-to-back parallelism (green [PARALLEL] when good)
+- **Knee**: Knee angle (green when straight)
+
+### Warning Messages
+
+If you see a red warning banner:
+```
+⚠️ NOT IN PUSH-UP POSITION
+Legs bent (145° < 160°)
+```
+
+Fix the issue mentioned:
+- **"Legs bent"** → Straighten your legs
+- **"Not horizontal"** → Get into plank position
+- **"Face not pointing down"** → Look at the ground
+
+## 🛠️ Troubleshooting
+
+### Camera Not Working
+
+**Problem**: Camera doesn't start or shows black screen
+
+**Solutions**:
+1. Check browser permissions:
+   - Settings → Apps → [Browser] → Permissions → Camera → Allow
+2. Try a different browser (Chrome, Firefox, Samsung Internet)
+3. Reload the page (pull down to refresh)
+4. Make sure no other app is using the camera
+
+### Can't Connect to Server
+
+**Problem**: Phone shows "Can't reach this page"
+
+**Solutions**:
+1. Verify both devices on same WiFi:
+   - Computer: Check WiFi name
+   - Phone: Settings → Connections → WiFi
+2. Check firewall isn't blocking port 8080:
+   - Windows: Allow Python through firewall
+   - Mac: System Preferences → Security → Firewall
+3. Try the IP address shown in terminal exactly
+4. Restart the server (`Ctrl+C`, then `python serve.py` again)
+
+### "INVALID POS" Won't Go Away
+
+**Problem**: Shows "INVALID POS" even when in position
+
+**Solutions**:
+1. Make sure camera can see your **full body**:
+   - Shoulders, hips, knees, ankles must be visible
+2. Get into **proper plank**:
+   - Legs straight (knees locked)
+   - Body parallel to ground
+   - Face looking down
+3. Adjust camera distance/angle
+4. Better lighting helps pose detection
+
+### Counting Not Working
+
+**Problem**: Reps not counting
+
+**Checks**:
+1. Is position indicator showing `✓ READY` (green)?
+   - If red, fix your position first
+2. Are you reaching the target angles?
+   - Elbow should go to ~80° at bottom
+   - Elbow should go to >120° at top
+   - Arm-Back should show `[PARALLEL]`
+3. Are you holding each position briefly?
+   - Don't go too fast
+   - Pause at bottom and top
+
+### Laggy Performance
+
+**Problem**: Camera feed is slow or choppy
+
+**Solutions**:
+1. Close other apps on your phone
+2. Use better lighting (helps processing)
+3. Move closer to WiFi router
+4. Try front camera (usually faster)
+
+## 📱 Optimal Phone Placement
+
+### Best Positions
+
+**Option 1: Side View (Recommended)**
+```
+                 [Phone on stand]
+                      ↓
+    You doing push-ups →  ║
+    (side view)           ║
+```
+- Best for form analysis
+- Can see full body alignment
+- Mount phone on stand/prop
+
+**Option 2: Angled View**
+```
+         [Phone at 45°]
+              ↙
+    You doing push-ups
+    (angled side view)
+```
+- Good compromise
+- Easier to see screen
+- Still captures form well
+
+### Phone Mounting Tips
+
+- Use a **phone stand** or **tripod**
+- **Prop against books/wall** in landscape mode
+- **2-3 meters away** for full body view
+- **Camera at chest height** when in plank
+
+## 🎯 Getting Accurate Counts
+
+### Form Requirements
+
+For a rep to count, you must:
+
+1. ✅ **Start extended** (elbow > 120°)
+2. ✅ **Go down to 80°** (±30° tolerance)
+3. ✅ **Keep arm parallel to back** (<40° difference)
+4. ✅ **Return to extended** (elbow > 120°)
+
+### Position Requirements
+
+Counter only works when:
+
+1. ✅ **Legs straight** (knee angle > 160°)
+2. ✅ **Body horizontal** (plank position)
+3. ✅ **Face pointing down**
+
+### Tips for Best Results
+
+- 🔥 **Good lighting** - helps pose detection significantly
+- 📏 **Full body visible** - shoulders to ankles on screen
+- 🎯 **Side angle** - 45-90° from straight-on
+- ⚡ **Stable camera** - no shaking or movement
+- 👕 **Fitted clothing** - helps keypoint detection
+
+## ⚙️ Advanced Settings
+
+### Adjusting Counting Sensitivity
+
+To make counting more lenient, edit `pushup_counter.js`:
+
+```javascript
+// In PushupCounter constructor (around line 8)
+this.downAngle = 80;           // Lower = need less depth
+this.angleTolerance = 30;      // Higher = more forgiving
+this.upThreshold = 120;        // Lower = less extension needed
+this.parallelThreshold = 40;   // Higher = less strict on form
+```
+
+### Disabling Position Validation
+
+In `pushup_counter.js`, line 235, change:
+
+```javascript
+// From:
+if (this.positionValid) {
+    const repCompleted = this.counter.update(elbowAvg, armBackDiff);
+
+// To:
+if (true) {  // Always allow counting
+    const repCompleted = this.counter.update(elbowAvg, armBackDiff);
+```
+
+## 🌐 Alternative: No Server Needed
+
+You can also open `index.html` directly in your phone's browser:
+
+1. Copy `web` folder to your phone
+2. Open Files app
+3. Navigate to folder
+4. Tap `index.html`
+5. Choose browser
+
+**Note**: Camera may not work due to browser security. Using the server is recommended.
+
+## 📊 What You'll See
+
+### During Use
+
+- **Real-time skeleton overlay** on camera view
+- **Rep counter** in top left
+- **Position status** in top right
+- **Live angle measurements** at bottom
+- **Score popup** after each rep
+
+### When Counting
+
+```
+Rep 1 Complete!
+Rep Score: 85/100
+```
+
+- Score appears briefly after each rep
+- Based on form quality
+- Higher score = better form
+
+## 🔒 Privacy & Security
+
+- **No data is sent anywhere** - everything runs locally
+- **No internet needed** after initial page load
+- **Camera feed stays on your device**
+- Server only on local WiFi network
+- No recordings or uploads
+
+## 💡 Pro Tips
+
+1. **Warm up first** - do a few practice reps to adjust positioning
+2. **Start slow** - focus on form, not speed
+3. **Watch metrics** - learn what angles work best for you
+4. **Use landscape** - better field of view
+5. **Stable mount** - tripod or stand highly recommended
+6. **Good light** - face a window or use room lights
+7. **Back camera** - usually higher quality than front
+
+## 🎓 Understanding the Metrics
+
+### Elbow Angle
+- **180°** = Arm completely straight (top position)
+- **120°** = Extended, rep complete
+- **80°** = Target bottom position
+- **50°** = Very deep (below tolerance)
+
+### Arm-Back Angle
+- **0°** = Perfectly parallel (rare)
+- **<20°** = Good form, arms close to body
+- **20-40°** = Acceptable (shows [PARALLEL])
+- **>40°** = Arms flaring out, not counted
+
+### Knee Angle
+- **180°** = Perfectly straight legs
+- **160°** = Minimum for valid plank
+- **<160°** = Bent knees, position invalid
+
+## 🤝 Support
+
+Having issues? Check:
+1. This troubleshooting guide
+2. Verify all requirements met
+3. Try different browser
+4. Restart server and phone
+5. Check WiFi connection
+
+## 🎉 Enjoy!
+
+You're all set! Start doing push-ups and let the AI count for you. Focus on your form and let the app track your progress!
+
+**Remember**: Quality over quantity. Better form = better results! 💪

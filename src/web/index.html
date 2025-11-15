@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Push-Up Counter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #videoContainer {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .stats-box {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px 20px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .rep-count {
+            font-size: 42px;
+            color: #00ff88;
+            margin-bottom: 5px;
+        }
+
+        .position-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .position-valid {
+            color: #00ff88;
+        }
+
+        .position-invalid {
+            color: #ff4444;
+        }
+
+        .metrics-box {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            color: #aaa;
+        }
+
+        .metric-value {
+            font-weight: bold;
+        }
+
+        .metric-good {
+            color: #00ff88;
+        }
+
+        .metric-warning {
+            color: #ffaa00;
+        }
+
+        .warning-banner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 68, 68, 0.95);
+            padding: 20px 30px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            display: none;
+        }
+
+        .warning-banner.show {
+            display: block;
+        }
+
+        .score-popup {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 255, 136, 0.95);
+            color: #000;
+            padding: 20px 40px;
+            border-radius: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+
+        .score-popup.show {
+            display: block;
+        }
+
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #333;
+            border-top-color: #00ff88;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #00ff88;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(0, 255, 136, 0.9);
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingScreen">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading AI Model...</div>
+    </div>
+
+    <div id="container">
+        <div id="videoContainer">
+            <video id="video" playsinline autoplay></video>
+            <canvas id="canvas"></canvas>
+            <div id="overlay">
+                <div class="stats-box">
+                    <div class="rep-count" id="repCount">0</div>
+                    <div>REPS</div>
+                </div>
+
+                <div class="position-indicator" id="positionIndicator">
+                    <span class="position-invalid">INVALID POS</span>
+                </div>
+
+                <div class="metrics-box" id="metricsBox">
+                    <div class="metric-row">
+                        <span class="metric-label">Elbow:</span>
+                        <span class="metric-value" id="elbowAngle">--°</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Arm-Back:</span>
+                        <span class="metric-value" id="armBackAngle">--°</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Knee:</span>
+                        <span class="metric-value" id="kneeAngle">--°</span>
+                    </div>
+                </div>
+
+                <div class="warning-banner" id="warningBanner">
+                    ⚠️ NOT IN PUSH-UP POSITION<br>
+                    <small id="warningReason">--</small>
+                </div>
+
+                <div class="score-popup" id="scorePopup">
+                    Rep Score: <span id="scoreValue">--</span>/100
+                </div>
+
+                <div class="controls">
+                    <button class="control-btn" id="resetBtn">Reset</button>
+                    <button class="control-btn" id="flipBtn">Flip</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"></script>
+
+    <script src="PushupCounter.js"></script>
+</body>
+</html>
